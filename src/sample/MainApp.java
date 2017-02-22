@@ -10,6 +10,13 @@ import org.opencv.core.Core;
 
 public class MainApp extends Application
 {
+    public static void main(String[] args) {
+        // load the native OpenCV library
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage)
     {
@@ -27,7 +34,7 @@ public class MainApp extends Application
             Scene scene = new Scene(root, 800, 600);
             // create the stage with the given title and the previously created
             // scene
-            primaryStage.setTitle("Face Detection and Tracking");
+            primaryStage.setTitle("HeadZoom");
             primaryStage.setScene(scene);
             // show the GUI
             primaryStage.show();
@@ -42,13 +49,5 @@ public class MainApp extends Application
         }
 
 
-    }
-
-    public static void main(String[] args)
-    {
-        // load the native OpenCV library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        launch(args);
     }
 }
