@@ -23,7 +23,7 @@ public class MainApp extends Application
         try
         {
 
-            //System.setProperty("webdriver.chrome.driver", "chromedriver.linux");
+
             // load the FXML resource
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Window.fxml"));

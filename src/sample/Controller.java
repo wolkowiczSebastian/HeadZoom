@@ -28,6 +28,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Controller {
 
+    @FXML
+    WebEngine webEngine;
+    @FXML
+    Button setDistanceButton;
     // FXML buttons
     @FXML
     private Button cameraButton;
@@ -43,20 +47,12 @@ public class Controller {
     private VideoCapture capture;
     // a flag to change the button behavior
     private boolean cameraActive;
-
     // face cascade classifier
     private CascadeClassifier faceCascade;
     private int absoluteFaceSize;
-
     private Position position = new Position();
-
     @FXML
     private WebView webview;
-    @FXML
-    WebEngine webEngine;
-
-    @FXML
-    Button setDistanceButton;
     @FXML
     private Button goButton;
 
@@ -65,14 +61,6 @@ public class Controller {
 
     @FXML
     private TextField textAdress;
-    //Initialise selenium Browoser Web driver:
-    //WebDriver chrome = new ChromeDriver();
-    //File browserAppPath = new File("/home/sebastian/Desktop/firefox/firefox/firefox");
-
-    //public WebDriver firefox = new FirefoxDriver( new FirefoxBinary(browserAppPath), new FirefoxProfile());
-
-
-
 
     /**
      * Init the controller, at start time
@@ -89,7 +77,7 @@ public class Controller {
     }
 
     /**
-     * The action triggered by pushing the button on the GUI
+     * The action triggered by pushing the start tracking button
      */
     @FXML
     protected void startCamera()
@@ -105,12 +93,12 @@ public class Controller {
             // start the video capture
             this.capture.open(0);
 
-            // is the video stream available?
+            // is the video stream active?
             if (this.capture.isOpened())
             {
                 this.cameraActive = true;
 
-                // grab a frame every 33 ms (30 frames/sec)
+                // grab a frame every 33 ms (30 frames/sec) beside of main JavaFx thread.
                 Runnable frameGrabber = new Runnable() {
 
                     @Override
@@ -242,25 +230,12 @@ public class Controller {
         updateZoom();
     }
 
-    /**
-     * The action triggered by selecting the Haar Classifier checkbox. It loads
-     * the trained set to be used for frontal face detection.
-     */
 
-
-    /**
-     * The action triggered by selecting the LBP Classifier checkbox. It loads
-     * the trained set to be used for frontal face detection.
-     */
 
 @FXML
 private void cameraButtonPressed(ActionEvent event)
     {
-        //we open google chrome window using selenium
-        // now the video capture can start
-        //chrome.get("pl.wikipedia.org");
-        //firefox.get("polsl.pl");
-        this.cameraButton.setDisable(false);
+
         startCamera();
     }
 
@@ -282,7 +257,7 @@ private void cameraButtonPressed(ActionEvent event)
         return new Image(new ByteArrayInputStream(buffer.toArray()));
     }
 
-
+    //Open the website in webview
     @FXML
     private void goPressed(ActionEvent event){
 
@@ -290,6 +265,7 @@ private void cameraButtonPressed(ActionEvent event)
     this.webEngine.load(adress);
 
     }
+
     @FXML
     private void openWebsite(KeyEvent event){
         if(event.getCode() == KeyCode.ENTER){
@@ -298,6 +274,8 @@ private void cameraButtonPressed(ActionEvent event)
                        }
 
     }
+
+    //set tolernace of change area ratio given by user
     @FXML
     private void setDistancePressed(ActionEvent event){
         position.setInitial();
@@ -306,16 +284,18 @@ private void cameraButtonPressed(ActionEvent event)
 
     }
 
+    //Update zoom in browoser from other tread
     private void updateZoom(){
         Platform.runLater(() -> {
 
-        if(position.isSet){
-            webview.setZoom(position.AreaRatio/100);
-        }
+            if (position.isSet) {
+                webview.setZoom(position.AreaRatio / 100);
+            }
 
         });
     }
 
+    // show distance on label
     @FXML
     private void ApplyTolerance(ActionEvent event){
         position.setTolerance(toleranceSlider.getValue());
